@@ -141,35 +141,17 @@
     var width = el.rx;
     var height = el.ry;
     var objectWidth = object.width/3;
-    console.log('left before ',left);
-    console.log('top before ', top);
-    console.log('width before ', width);
-    console.log('height before ', height);
-    console.log('object width ', objectWidth);
     object.clipTo = function (ctx) { 
-      if (top < 0 || left < 0 || height*el.scaleY > objectWidth) {
-        console.log('left < 0 ', left);
-        console.log('top < 0 ', top);
-        console.log('width ', width);
-        console.log('height ', height);
+      if (left < 0 || top < 0 || width*el.scaleX > objectWidth || height*el.scaleY > objectWidth) {
         alert('No can do that crop');
         location.reload();
-      } else if (top > 0 || left > 0 || (width*el.scaleX < objectWidth && height*el.scaleY < objectWidth)) { 
-        ctx.ellipse(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
-        console.log('left > 0', left);
-        console.log('top > 0 ', top);
-        console.log('width ', parseInt(width*el.scaleX));
-        console.log('height ', parseInt(height*el.scaleY));
-        console.log('el.scaleX ', el.scaleX);
-        console.log('el.scaleY ', el.scaleY);
+      } else if (left > 0 && top > 0 && el.scaleX === 1 && el.scaleY === 1 && width === objectWidth && height === objectWidth){
+        alert('No can do that crop');
+        location.reload();
+      } else if (left > 0 || top > 0 || (width*el.scaleX < objectWidth && height*el.scaleY < objectWidth)) { 
+        ctx.ellipse(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 3 * Math.PI);
       } else {
-        ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
-        console.log('left = 0 ', left);
-        console.log('top = 0 ', top);
-        console.log('width ', parseInt(width*el.scaleX));
-        console.log('height ', parseInt(height*el.scaleY));
-        console.log('el.scaleX ', el.scaleX);
-        console.log('el.scaleY ', el.scaleY);
+        ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 3 * Math.PI);
       }  
     }
     canvas.remove(canvas.getActiveObject(el));
