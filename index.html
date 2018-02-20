@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="utf-8">
+    <title>Image Cropping with Fabric</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pretty-checkbox/3.0.0/pretty-checkbox.min.css" />
+    <link rel="stylesheet" href="css/styles.css">
+     <link rel="stylesheet" href="css/darkroom.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.11/fabric.min.js"></script>
+  </head>
+  <body>
+    <div id="bd-wrapper" >
+      <h2>Cropping with Fabric</h2>
+        <canvas id="c" width="600" height="560" style="border: 1px dashed grey;"></canvas>
+      <br/>
+      <div class="controls" id="text-controls-additional">
+        <h3>Rectangle Crop</h3>
+        <button class="btn" id="startCropRect">Start Crop</button> 
+        <button class="btn" id="endCropRect">End Crop</button> 
+        <h3>Circle Crop</h3>
+        <button class="btn" id="startCropEl">Start Crop</button> 
+        <button class="btn" id="endCropEl">End Crop</button> 
+        <h3>Undo/Redo for both</h3>
+        <button class="btn" id="undoCrop">Undo Crop</button>
+        <button class="btn" id="redoCrop">Redo Crop</button><br />
+        <img id="gingerbread-house" style="display:none;" src="images/Gingerbread-House.jpg">
+        <img id="pavlova" style="display:none;" src="images/Pavlova.jpg">
+        <img id="gingerbread" style="display:none;" src="images/Gingerbread.jpg"> 
+    </div>
+    <script src="js/script.js"></script>
+  </div>
+  </body>
+</html>
