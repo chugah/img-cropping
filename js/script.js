@@ -145,13 +145,18 @@
       if (left < 0 || top < 0 || width*el.scaleX > objectWidth || height*el.scaleY > objectWidth) {
         alert('No can do that crop');
         location.reload();
-      } else if (left > 0 && top > 0 && el.scaleX === 1 && el.scaleY === 1 && width === objectWidth && height === objectWidth){
+      } else if (left > 0 && top > 0 && el.scaleX === 1 && el.scaleY === 1){
         alert('No can do that crop');
         location.reload();
-      } else if (left > 0 || top > 0 || (width*el.scaleX < objectWidth && height*el.scaleY < objectWidth)) { 
-        ctx.ellipse(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 3 * Math.PI);
+      } else if (left > canvas.width/2 || top > canvas.width/2) { //Not sure about this error handling
+          alert('No can do that crop');
+          location.reload();
+      } else if (left > 0 || top > 0 || (width*el.scaleX === height*el.scaleY)) { 
+        ctx.ellipse(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
+      } else if (parseInt(width*el.scaleX) !== parseInt(height*el.scaleY)) { 
+        ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), Math.PI/180, 0, 2 * Math.PI);
       } else {
-        ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 3 * Math.PI);
+        ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
       }  
     }
     canvas.remove(canvas.getActiveObject(el));
