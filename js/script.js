@@ -117,8 +117,6 @@
         rx: object.width/3,
         ry: object.width/3,
         opacity: 1,
-        width: 1,
-        height: 1,
         borderColor: '#36fd00',
         cornerColor: 'green',
         hasRotatingPoint:false,
@@ -137,22 +135,43 @@
   }
 
   function endCropEl(){
-    var left = el.left - object.left;
-    var top = el.top - object.top;
-    var width = el.rx * 1;
-    var height = el.ry * 1;
+    var left = Math.floor(el.left - object.left);
+    var top = Math.floor(el.top - object.top);
+    var width = el.rx;
+    var height = el.ry;
+    var objectWidth = object.width/3;
+    console.log('left before ',left);
+    console.log('top before ', top);
+    console.log('width before ', width);
+    console.log('height before ', height);
+    console.log('object width ', objectWidth);
     object.clipTo = function (ctx) { 
-      if (top !== 0 || left !== 0) {    
-      ctx.ellipse(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
+      if (top < 0 || left < 0) {
+        console.log('left < 0 ', left);
+        console.log('top < 0 ', top);
+        console.log('width ', width);
+        console.log('height ', height);
+        alert('No can do that crop');
+        location.reload();
+      } else if (top > 0 || left > 0 || (width*el.scaleX < objectWidth && height*el.scaleY < objectWidth)) { 
+        ctx.ellipse(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
+        console.log('left > 0', left);
+        console.log('top > 0 ', top);
+        console.log('width ', parseInt(width*el.scaleX));
+        console.log('height ', parseInt(height*el.scaleY));
       } else {
         ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
+        console.log('left = 0 ', left);
+        console.log('top = 0 ', top);
+        console.log('width ', parseInt(width*el.scaleX));
+        console.log('height ', parseInt(height*el.scaleY));
       }  
     }
     canvas.remove(canvas.getActiveObject(el));
     lastActive = object;
     canvas.renderAll();   
   }
-  
+
   var updateModifications = function() {
     if((config.undoStatus == false && config.redoStatus == false)){
       var jsonData = canvas.toJSON();
