@@ -93,14 +93,13 @@
     var left = el.left - object.left;
     var top = el.top - object.top;    
     var width = el.width;
-    var height = el.height;
-    
+    var height = el.height;    
     object.clipTo = function (ctx) {  
-      if (left < 0 || top < 0 || parseInt(width*el.scaleX) > object.width ) { 
+      if (left < 0 || top < 0 || left > object.width/2 || top > object.height/2) { 
         alert('Crop guides can not extend beyond image.');
         location.reload();
       } else {
-        ctx.rect(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY));     
+        ctx.rect(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY));console.log('left after crop ', left);    
       }      
     }   
     canvas.remove(canvas.getActiveObject(el));
