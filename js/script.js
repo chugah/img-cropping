@@ -88,6 +88,7 @@
     }
   }
 
+  // end crop function with rectangle
   function endCropRect(){
     var left = el.left - object.left;
     var top = el.top - object.top;    
@@ -135,29 +136,39 @@
     }
   }
 
+  // end crop function with circle
   function endCropEl(){
     var left = Math.floor(el.left - object.left);
     var top = Math.floor(el.top - object.top);
     var width = el.rx;
     var height = el.ry;
     var objectWidth = object.width/3;
+    console.log('left before ', left);
+    console.log('top before ', top);
+    console.log('width before ', width);
+    console.log('height before ', height);
+    console.log('object width ', objectWidth);
     object.clipTo = function (ctx) { 
-      if (left < 0 || top < 0 || width*el.scaleX > objectWidth || height*el.scaleY > objectWidth) {
-        alert('No can do that crop');
+      // Ensures crop guides do not extend beyond image & crop is in the shape of a circle
+      if (left < 0 || top < 0 || width*el.scaleX > objectWidth || height*el.scaleY > objectWidth) {        
+        alert('Crop guides can not extend beyond image.');
         location.reload();
-      } else if (left > 0 && top > 0 && el.scaleX === 1 && el.scaleY === 1){
-        alert('No can do that crop');
+      } else if ((left > objectWidth && -(width/2)+left > objectWidth) || (top > objectWidth && -(height/2)+top > objectWidth)) {
+        alert('Crop guides can not extend beyond image.');
         location.reload();
-      } else if (left > canvas.width/2 || top > canvas.width/2) { //Not sure about this error handling
-          alert('No can do that crop');
-          location.reload();
-      } else if (left > 0 || top > 0 || (width*el.scaleX === height*el.scaleY)) { 
-        ctx.ellipse(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
-      } else if (parseInt(width*el.scaleX) !== parseInt(height*el.scaleY)) { 
+      } else if (el.scaleX !== el.scaleY) { 
         ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), Math.PI/180, 0, 2 * Math.PI);
-      } else {
+        alert('Can only crop with a circle');
+        location.reload();
+      } // image crop  
+        else if (parseInt(width*el.scaleX) === objectWidth || parseInt(height*el.scaleY) === objectWidth){
         ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
-      }  
+      } else if (left > 0 || top > 0 || (el.scaleX === el.scaleY)) { 
+        ctx.ellipse(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
+      }  else {
+        alert('Please try again.');
+        location.reload();
+      }
     }
     canvas.remove(canvas.getActiveObject(el));
     lastActive = object;
@@ -210,7 +221,7 @@
     }
   }
 
-  // redo crop function 
+  // redo crop function but not working properly
   var redoCrop = function() {
     if(config.redoFinishedStatus){
       if (config.canvasState.length > config.currentStateIndex && config.canvasState.length != 0){
