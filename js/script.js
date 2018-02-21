@@ -94,8 +94,43 @@
     var top = el.top - object.top;    
     var width = el.width;
     var height = el.height;
-    object.clipTo = function (ctx) {      
-      ctx.rect(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY));
+    console.log('left before crop ', left);
+    console.log('top before crop ', top);
+    console.log('left before crop adjusted ', -(width/2)+left);
+    console.log('top before crop adjusted ', -(height/2)+top);
+    console.log('width before crop ', width);
+    console.log('height before crop ', height);   
+    console.log('object width before crop ', object.width);
+    console.log('object height before crop ', object.height);
+    console.log('scale x before crop', el.scaleX);
+    console.log('scale y before crop', el.scaleY);
+    object.clipTo = function (ctx) {  
+      if (left < 0 || top < 0 || Math.floor(left) > object.width) { 
+        console.log('left no crop ', left);
+        console.log('top no crop ', top);
+        console.log('left no crop adjusted ', -(width/2)+left);
+        console.log('top no crop adjusted ', -(height/2)+top);
+        console.log('width no crop ', parseInt(width*el.scaleX));
+        console.log('height no crop ', parseInt(height*el.scaleY));
+        console.log('object width no crop ', object.width);
+        console.log('object height no crop ', object.height);
+        console.log('scale x no crop', el.scaleX);
+        console.log('scale y no crop', el.scaleY);       
+        alert('Crop guides can not extend beyond image.');
+        location.reload();
+      } else {
+        ctx.rect(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY));
+        console.log('left after crop ', left);
+        console.log('top after crop ', top);
+        console.log('left after crop adjusted ', -(width/2)+left);
+        console.log('top after crop adjusted ', -(height/2)+top);
+        console.log('width after crop ', parseInt(width*el.scaleX));
+        console.log('height after crop ', parseInt(height*el.scaleY));
+        console.log('object width after crop ', object.width);
+        console.log('object height after crop ', object.height);
+        console.log('scale x after crop', el.scaleX);
+        console.log('scale y after crop', el.scaleY);  
+      }      
     }   
     canvas.remove(canvas.getActiveObject(el));
     lastActive = object;
