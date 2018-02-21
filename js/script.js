@@ -99,7 +99,7 @@
         alert('Crop guides can not extend beyond image.');
         location.reload();
       } else {
-        ctx.rect(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY));console.log('left after crop ', left);    
+        ctx.rect(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY));   
       }      
     }   
     canvas.remove(canvas.getActiveObject(el));
