@@ -141,19 +141,13 @@
     var left = Math.floor(el.left - object.left);
     var top = Math.floor(el.top - object.top);
     var width = el.rx;
-    var height = el.ry;
-    var objectWidth = object.width/3;
-    console.log('left before ', left);
-    console.log('top before ', top);
-    console.log('width before ', width);
-    console.log('height before ', height);
-    console.log('object width ', objectWidth);
+    var height = el.ry; 
     object.clipTo = function (ctx) { 
       // Ensures crop guides do not extend beyond image & crop is in the shape of a circle
-      if (left < 0 || top < 0 || width*el.scaleX > objectWidth || height*el.scaleY > objectWidth) {        
+      if (left < 0 || top < 0 || width*el.scaleX > width || height*el.scaleY > width) {        
         alert('Crop guides can not extend beyond image.');
         location.reload();
-      } else if ((left > objectWidth && -(width/2)+left > objectWidth) || (top > objectWidth && -(height/2)+top > objectWidth)) {
+      } else if ((left > width && -(width/2)+left > width) || (top > width && -(height/2)+top > width)) {
         alert('Crop guides can not extend beyond image.');
         location.reload();
       } else if (el.scaleX !== el.scaleY) { 
@@ -161,7 +155,7 @@
         alert('Can only crop with a circle');
         location.reload();
       } // image crop  
-        else if (parseInt(width*el.scaleX) === objectWidth || parseInt(height*el.scaleY) === objectWidth){
+        else if (parseInt(width*el.scaleX) === width || parseInt(height*el.scaleY) === width){
         ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
       } else if (left > 0 || top > 0 || (el.scaleX === el.scaleY)) { 
         ctx.ellipse(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
