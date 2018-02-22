@@ -47,12 +47,12 @@
   });
 
   // crop image handlers
-  $('startCropRect').onclick = function(){ startCropRect(); };
-  $('endCropRect').onclick = function(){ endCropRect(); };
-  $('startCropEl').onclick = function(){ startCropEl(); };
-  $('endCropEl').onclick = function(){ endCropEl(); };
-  $('undoCrop').onclick = function(){ undoCrop(); };
-  $('redoCrop').onclick = function(){ redoCrop(); };
+  $('startCropRect').onclick = function() { startCropRect(); };
+  $('endCropRect').onclick = function() { endCropRect(); };
+  $('startCropEl').onclick = function() { startCropEl(); };
+  $('endCropEl').onclick = function() { endCropEl(); };
+  $('undoCrop').onclick = function() { undoCrop(); };
+  $('redoCrop').onclick = function() { redoCrop(); };
 
   // initiate crop function with rectangle
   function startCropRect(){
@@ -90,15 +90,17 @@
 
   // end crop function with rectangle
   function endCropRect(){
-    var left = el.left - object.left;
-    var top = el.top - object.top;    
+    var left = Math.floor(el.left - object.left);
+    var top = Math.floor(el.top - object.top);    
     var width = el.width;
     var height = el.height;    
     object.clipTo = function (ctx) {  
+      // check for crop guides extending beyond image
       if (left < 0 || top < 0 || left > object.width/2 || top > object.height/2) { 
         alert('Crop guides can not extend beyond image.');
         location.reload();
       } else {
+        // crop image
         ctx.rect(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY));   
       }      
     }   
@@ -146,27 +148,23 @@
     var left = Math.floor(el.left - object.left);
     var top = Math.floor(el.top - object.top);
     var width = el.rx;
-    var height = el.ry; 
+    var height = el.ry;   
     object.clipTo = function (ctx) { 
-      // Ensures crop guides do not extend beyond image & crop is in the shape of a circle
-      if (left < 0 || top < 0 || width*el.scaleX > width || height*el.scaleY > width) {        
-        alert('Crop guides can not extend beyond image.');
-        location.reload();
-      } else if ((left > width && -(width/2)+left > width) || (top > width && -(height/2)+top > width)) {
-        alert('Crop guides can not extend beyond image.');
-        location.reload();
-      } else if (el.scaleX !== el.scaleY) { 
-        ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), Math.PI/180, 0, 2 * Math.PI);
+      // check for crop guides extending beyond image & is in the shape of a circle  
+      if (el.scaleX !== el.scaleY) {      
         alert('Can only crop with a circle');
         location.reload();
-      } // image crop  
-        else if (parseInt(width*el.scaleX) === width || parseInt(height*el.scaleY) === width){
-        ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
-      } else if (left > 0 || top > 0 || (el.scaleX === el.scaleY)) { 
-        ctx.ellipse(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);
-      }  else {
-        alert('Please try again.');
+      } else if (left < 0 || top < 0 || width*el.scaleX > width) {           
+        alert('Crop guides can not extend beyond image.');
         location.reload();
+      } else if (left > 0 && top > 0 && el.scaleX === 1 && el.scaleY === 1) {
+        alert('Crop guides can not extend beyond image.');
+        location.reload();
+      } // check for crop parameters   
+        else if (parseInt(width*el.scaleX) === width || parseInt(height*el.scaleY) === width){
+        ctx.ellipse(left, top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);  
+      } else { 
+        ctx.ellipse(-(width/2)+left, -(height/2)+top, parseInt(width*el.scaleX), parseInt(height*el.scaleY), 45 * Math.PI/180, 0, 2 * Math.PI);     
       }
     }
     canvas.remove(canvas.getActiveObject(el));
@@ -174,9 +172,9 @@
     canvas.renderAll();   
   }
 
-  // undo redo state change function
+  // undo and redo state change 
   var updateModifications = function() {
-    if((config.undoStatus == false && config.redoStatus == false)){
+    if((config.undoStatus === false && config.redoStatus === false)){
       var jsonData = canvas.toJSON();
       var canvasAsJson = JSON.stringify(jsonData);
       if(config.currentStateIndex < config.canvasState.length-1){
@@ -191,15 +189,15 @@
      }
   }
  
-  // undo crop function
+  // undo crop 
   var undoCrop = function() {
     if(config.undoFinishedStatus){
-      if(config.currentStateIndex == -1){
+      if(config.currentStateIndex === -1){
         config.undoStatus = false;
       } else {
         if (config.canvasState.length >= 1) {
             config.undoFinishedStatus = 0;
-          if(config.currentStateIndex != 0){
+          if(config.currentStateIndex !== 0){
             config.undoStatus = true;
             canvas.loadFromJSON(config.canvasState[config.currentStateIndex-1],function(){
                 var jsonData = JSON.parse(config.canvasState[config.currentStateIndex-1]);
@@ -210,7 +208,7 @@
                 config.undoFinishedStatus = 1;
             });
           }
-          else if(config.currentStateIndex == 0){
+          else if(config.currentStateIndex === 0){
             canvas.clear();
             config.undoFinishedStatus = 1;
             config.currentStateIndex -= 1;
@@ -220,10 +218,10 @@
     }
   }
 
-  // redo crop function but not working properly
+  // redo crop but not working properly
   var redoCrop = function() {
     if(config.redoFinishedStatus){
-      if (config.canvasState.length > config.currentStateIndex && config.canvasState.length != 0){
+      if (config.canvasState.length > config.currentStateIndex && config.canvasState.length !== 0){
           config.redoFinishedStatus = 0;
           config.redoStatus = true;
           canvas.loadFromJSON(config.canvasState[config.currentStateIndex+1], function(){
